@@ -1,15 +1,31 @@
 package br.com.acrtech.fraude.controller
 
+import br.com.acrtech.fraude.model.FileModel
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
+import org.springframework.ui.ModelMap
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import javax.servlet.ServletContext
 
 @Controller
-class HomeController {
+class HomeController(
+    val context: ServletContext
+) {
 
     @GetMapping("/")
-    fun home(model:Model):String{
-        model.addAttribute("variavel", "Hello, world! Cezão da Bahia broca pai.")
+    fun home():String{
+        return "home"
+    }
+
+    @PostMapping("uploadFile")
+    fun uploadFile(file: FileModel, result: BindingResult, model: ModelMap): String {
+        if (result.hasErrors()){
+            model.addAttribute("erro", "Erro ao carregar o arquivo")
+            return "uploadError"
+        }
+        println("Nome do arquivo: ${file.file?.originalFilename}")
+        println("Tamanho: ${file.file?.bytes?.size} bytes")
         return "home"
     }
 }
