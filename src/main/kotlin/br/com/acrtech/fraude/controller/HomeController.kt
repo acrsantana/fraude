@@ -3,6 +3,7 @@ package br.com.acrtech.fraude.controller
 import br.com.acrtech.fraude.model.FileModel
 import br.com.acrtech.fraude.service.TransacaoService
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.ui.ModelMap
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping

@@ -6,6 +6,7 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.Lob
 import javax.persistence.Table
 
 @Entity
@@ -17,7 +18,12 @@ data class Carga(
     val fileName: String?,
     val size: Int?,
     val totalTransacoes: Int,
-    val status: Boolean, //true = Sucesso, false = Falha
+    var status: Boolean?, //true = Sucesso, false = Falha
     val dataCarga: LocalDateTime = LocalDateTime.now(),
-    val dataReferenciaTransacoes: LocalDate
-)
+    var dataReferenciaTransacoes: LocalDate?,
+    var listaErros: String?
+) {
+    override fun toString(): String {
+        return "Carga(id=$id, fileName=$fileName, size=$size, totalTransacoes=$totalTransacoes, status=$status, dataCarga=$dataCarga, dataReferenciaTransacoes=$dataReferenciaTransacoes, listaErros=$listaErros)"
+    }
+}

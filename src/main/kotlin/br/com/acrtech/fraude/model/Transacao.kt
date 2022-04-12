@@ -20,5 +20,8 @@ data class Transacao(
     val valorTransacao: BigDecimal,
     val dataHoraTransacao: LocalDateTime
 ) {
+    override fun toString(): String {
+        return "Transacao(id=$id, bancoOrigem='$bancoOrigem', agenciaOrigem='$agenciaOrigem', contaOrigem='$contaOrigem', bancoDestino='$bancoDestino', agenciaDestino='$agenciaDestino', contaDestino='$contaDestino', valorTransacao=$valorTransacao, dataHoraTransacao=$dataHoraTransacao)"
+    }
 
 }

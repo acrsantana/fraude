@@ -9,8 +9,6 @@ import org.apache.tomcat.util.http.fileupload.FileUploadException
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.security.InvalidParameterException
-import java.time.DateTimeException
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Service
@@ -20,60 +18,82 @@ class TransacaoService(
 ) {
 
     val invalidParameterMessage: String = "Quantidade inválida de parâmetros. Todos os campos são obrigatórios"
+    val fileUploadMessage: String = "Arquivo não existe ou não possui conteúdo"
+    val illegalArgumentMessage: String = "Já foi realizada uma carga na data indicada: "
 
     fun processaArquivo(file: FileModel) {
+
         val nomeArquivo = file.file?.originalFilename
         val tamanho = file.file?.bytes?.size
 
-        println("Nome do arquivo: $nomeArquivo")
-        println("Tamanho: $tamanho bytes")
         var listaDeTransacoes: MutableList<String> = mutableListOf()
         var contadorTransacoes = 0
-        if (file.file?.isEmpty == true) {
-            throw FileUploadException("Arquivo não existe ou não possui conteúdo")
-        }
-        file.file?.inputStream?.bufferedReader()?.forEachLine { transacao ->
-            contadorTransacoes++
-            listaDeTransacoes.add(transacao)
-            println(transacao)
-        }
 
-        val primeiraTransacao = validaTransacao(listaDeTransacoes[0])
-        val carga = cargaRepository.findByDataReferenciaTransacoes(primeiraTransacao.dataHoraTransacao.toLocalDate())
-        if (carga?.equals(null) == false){
-            throw IllegalArgumentException("Já foi realizada uma carga na data indicada: ${carga.dataReferenciaTransacoes}")
-        }
-        var status = true
-        var transacaoInicial = validaTransacao(listaDeTransacoes[0])
-        listaDeTransacoes.forEach { t ->
-            val transacao = validaTransacao(t)
-            if (transacaoInicial.dataHoraTransacao.toLocalDate() == transacao.dataHoraTransacao.toLocalDate()){
-                try {
-                    transacaoRepository.save(transacao)
-                } catch (e: InvalidParameterException) {
-                    status = false
-                }
-            }
-
-        }
-        cargaRepository.save(Carga(
+        var cargaStatus = Carga(
             id = null,
             fileName = nomeArquivo,
             size = tamanho,
             totalTransacoes = contadorTransacoes,
-            status = status,
-            dataReferenciaTransacoes = transacaoInicial.dataHoraTransacao.toLocalDate()
-        ))
+            status = true,
+            dataReferenciaTransacoes = null,
+            listaErros = null
+        )
+        try {
+            if (file.file?.isEmpty == true) {
+                throw FileUploadException(fileUploadMessage)
+            }
+
+            file.file?.inputStream?.bufferedReader()?.forEachLine { transacao ->
+                contadorTransacoes++
+                listaDeTransacoes.add(transacao)
+            }
+
+
+            val primeiraTransacao: Transacao = validaTransacao(listaDeTransacoes[0])
+                ?: throw InvalidParameterException(invalidParameterMessage)
+            val dataPrimeiraTransacao = primeiraTransacao.dataHoraTransacao.toLocalDate()
+            cargaStatus.dataReferenciaTransacoes = dataPrimeiraTransacao
+
+            val carga = cargaRepository.findByDataReferenciaTransacoes(dataPrimeiraTransacao) ?: cargaStatus
+            if (carga.id != null) {
+                throw IllegalArgumentException("$illegalArgumentMessage $dataPrimeiraTransacao")
+            }
+
+            listaDeTransacoes.forEach { t ->
+                val transacao = validaTransacao(t) ?: throw InvalidParameterException(invalidParameterMessage)
+                if (dataPrimeiraTransacao == transacao.dataHoraTransacao.toLocalDate()) {
+                    try {
+                        println("Antes de salvar: $transacao")
+                        transacaoRepository.save(transacao)
+
+                    } catch (e: InvalidParameterException) {
+                        throw InvalidParameterException(invalidParameterMessage)
+                    }
+                } else {
+                    throw IllegalArgumentException("$illegalArgumentMessage ${carga.dataReferenciaTransacoes}")
+                }
+
+                cargaRepository.save(cargaStatus)
+
+            }
+        } catch (e: Exception) {
+            cargaStatus.status = false
+            cargaStatus.listaErros = e.message
+            println(cargaStatus)
+            cargaRepository.save(cargaStatus)
+        }
+
+
     }
 
-    fun validaTransacao(transacao: String): Transacao {
+    fun validaTransacao(transacao: String): Transacao? {
         var campos = transacao.split(",")
         if (campos.size != 8) {
-            throw InvalidParameterException(invalidParameterMessage)
+            return null
         } else {
             campos.forEach {
                 if (it.isNullOrEmpty()) {
-                    throw InvalidParameterException(invalidParameterMessage)
+                    return null
                 }
             }
 
