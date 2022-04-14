@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import javax.servlet.ServletContext
 
 @Controller
-class HomeController(
+class kHomeController(
     val context: ServletContext,
     val service: TransacaoService
 ) {
@@ -28,7 +28,14 @@ class HomeController(
             return "uploadError"
         }
 
-        service.processaArquivo(file)
-        return "home"
+        val resultado = service.processaArquivo(file)
+        if (resultado.sucesso){
+            model.addAttribute("lista", resultado.transacoes)
+            return "home"
+        } else {
+            model.addAttribute("resposta", resultado.carga)
+            return "uploadError"
+        }
+
     }
 }
