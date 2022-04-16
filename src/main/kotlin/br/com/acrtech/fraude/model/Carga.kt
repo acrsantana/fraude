@@ -17,13 +17,22 @@ data class Carga(
     val id: Long?,
     val fileName: String?,
     val size: Int?,
-    var totalTransacoes: Int,
-    var status: Boolean?, //true = Sucesso, false = Falha
+    var totalTransacoesArquivo: Int,
+    var totalTransacoesSucesso: Int,
+    var totalTransacoesFalha: Int,
     val dataCarga: LocalDateTime = LocalDateTime.now(),
     var dataReferenciaTransacoes: LocalDate?,
     var erros: String?
 ) {
     override fun toString(): String {
-        return "Carga(id=$id, fileName=$fileName, size=$size, totalTransacoes=$totalTransacoes, status=$status, dataCarga=$dataCarga, dataReferenciaTransacoes=$dataReferenciaTransacoes, listaErros=$erros)"
+        return "Carga(id=$id, " +
+                "fileName=$fileName, " +
+                "size=$size, " +
+                "totalTransacoesArquivo=$totalTransacoesArquivo, " +
+                "totalTransacoesSucesso=$totalTransacoesSucesso, " +
+                "totalTransacoesFalha=$totalTransacoesFalha, " +
+                "dataCarga=$dataCarga, " +
+                "dataReferenciaTransacoes=$dataReferenciaTransacoes, " +
+                "erros=$erros)"
     }
 }

@@ -26,69 +26,90 @@ class TransacaoService(
 
         val nomeArquivo = file.file?.originalFilename
         val tamanho = file.file?.bytes?.size
+        val transacoesASeremValidadas: MutableList<String> = mutableListOf()
+        var contadorDeTransacoesNoArquivo = 0
+        var contadorDeTransacoesValidas = 0
+        var contadorDeTransacoesInvalidas = 0
+        val transacoesValidadas: MutableList<String> = mutableListOf()
+        val transacoesInvalidas: MutableList<String> = mutableListOf()
 
-        var listaDeTransacoes: MutableList<String> = mutableListOf()
-        var contadorTransacoes = 0
-        var lista = arrayListOf<Transacao>()
-
-        var cargaStatus = Carga(
+        val statusDaCarga = Carga(
             id = null,
             fileName = nomeArquivo,
             size = tamanho,
-            totalTransacoes = contadorTransacoes,
-            status = true,
+            totalTransacoesArquivo = contadorDeTransacoesNoArquivo,
+            totalTransacoesFalha = contadorDeTransacoesInvalidas,
+            totalTransacoesSucesso = contadorDeTransacoesValidas,
             dataReferenciaTransacoes = null,
             erros = null
         )
+
         try {
-            if (file.file?.isEmpty == true) {
+
+            file.file?.inputStream?.bufferedReader()?.forEachLine { transacao ->
+                if (!transacao.trim().isNullOrEmpty()){
+                    transacoesASeremValidadas.add(transacao)
+                    contadorDeTransacoesNoArquivo++
+                }
+            }
+
+            if (contadorDeTransacoesNoArquivo == 0) {
                 throw FileUploadException(fileUploadMessage)
             }
 
-            file.file?.inputStream?.bufferedReader()?.forEachLine { transacao ->
-                contadorTransacoes++
-                listaDeTransacoes.add(transacao)
-            }
-
-
-            val primeiraTransacao: Transacao = validaTransacao(listaDeTransacoes[0])
+//          Pega a primeira linha do arquivo e tenta converter em uma transação válida. Caso não consiga a carga é abortada.
+            val primeiraTransacao: Transacao = validaTransacao(transacoesASeremValidadas[0])
                 ?: throw InvalidParameterException(invalidParameterMessage)
-            val dataPrimeiraTransacao = primeiraTransacao.dataHoraTransacao.toLocalDate()
-            cargaStatus.dataReferenciaTransacoes = dataPrimeiraTransacao
 
-            val carga = cargaRepository.findByDataReferenciaTransacoes(dataPrimeiraTransacao) ?: cargaStatus
+            val dataPrimeiraTransacao = primeiraTransacao.dataHoraTransacao.toLocalDate()
+            statusDaCarga.dataReferenciaTransacoes = dataPrimeiraTransacao
+
+//          Verifica se já existe uma carga no banco com a mesma data de referencia. Caso já exista a carga é abortada.
+            val carga = cargaRepository.findByDataReferenciaTransacoes(dataPrimeiraTransacao) ?: statusDaCarga
             if (carga.id != null) {
                 throw IllegalArgumentException("$illegalArgumentMessage $dataPrimeiraTransacao")
             }
 
-            listaDeTransacoes.forEach { t ->
-                val transacao = validaTransacao(t) ?: throw InvalidParameterException(invalidParameterMessage)
 
+            for (t in transacoesASeremValidadas){
+                val transacao = validaTransacao(t)
+                if (transacao == null){
+                    transacoesInvalidas.add(t)
+                    contadorDeTransacoesInvalidas++
+                    continue
+                }
                 if (dataPrimeiraTransacao == transacao.dataHoraTransacao.toLocalDate()) {
                     try {
                         transacaoRepository.save(transacao)
-                        lista.add(transacao)
+                        transacoesValidadas.add(t)
+                        contadorDeTransacoesValidas++
                     } catch (e: InvalidParameterException) {
-                        throw InvalidParameterException(invalidParameterMessage)
+                        transacoesInvalidas.add(t)
+                        contadorDeTransacoesInvalidas++
+                        continue
                     }
                 } else {
-                    throw IllegalArgumentException("$illegalArgumentMessage ${carga.dataReferenciaTransacoes}")
+                    transacoesInvalidas.add(t)
+                    contadorDeTransacoesInvalidas++
+                    continue
                 }
-                cargaStatus.totalTransacoes = contadorTransacoes
-                cargaRepository.save(cargaStatus)
+                statusDaCarga.totalTransacoesArquivo = contadorDeTransacoesNoArquivo
+                statusDaCarga.totalTransacoesSucesso = contadorDeTransacoesValidas
+                statusDaCarga.totalTransacoesFalha = contadorDeTransacoesInvalidas
+                cargaRepository.save(statusDaCarga)
 
 
             }
-        } catch (e: Exception) {
-            cargaStatus.status = false
-            cargaStatus.erros = e.message
-            cargaStatus.totalTransacoes = contadorTransacoes
-            println(cargaStatus)
-            cargaRepository.save(cargaStatus)
-            return Resposta(sucesso = false, cargaStatus, null)
+        } catch (excecao: Exception) {
+            statusDaCarga.totalTransacoesFalha = contadorDeTransacoesInvalidas
+            statusDaCarga.erros = excecao.message
+            statusDaCarga.totalTransacoesArquivo = contadorDeTransacoesNoArquivo
+            statusDaCarga.totalTransacoesSucesso = contadorDeTransacoesValidas
+            cargaRepository.save(statusDaCarga)
+            return Resposta(sucesso = false, statusDaCarga, transacoesInvalidas)
         }
 
-        return Resposta(sucesso = true, cargaStatus, lista)
+        return Resposta(sucesso = true, statusDaCarga, transacoesValidadas)
     }
 
     fun validaTransacao(transacao: String): Transacao? {
