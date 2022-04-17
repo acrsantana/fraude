@@ -44,6 +44,18 @@ class TransacaoService(
             erros = null
         )
 
+        var transacaoNula = Transacao(
+            null,
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            BigDecimal(0),
+            LocalDateTime.now()
+        )
+
         try {
 
             file.file?.inputStream?.bufferedReader()?.forEachLine { transacao ->
@@ -80,9 +92,27 @@ class TransacaoService(
                 }
                 if (dataPrimeiraTransacao == transacao.dataHoraTransacao.toLocalDate()) {
                     try {
-                        transacaoRepository.save(transacao)
-                        transacoesValidadas.add(t)
-                        contadorDeTransacoesValidas++
+                        val buscarTransacaoIgual = transacaoRepository.buscarTransacaoIgual(
+                            transacao.bancoOrigem,
+                            transacao.agenciaOrigem,
+                            transacao.contaOrigem,
+                            transacao.bancoDestino,
+                            transacao.agenciaDestino,
+                            transacao.contaDestino,
+                            transacao.valorTransacao,
+                            transacao.dataHoraTransacao
+                        ) ?: transacaoNula
+
+                        if (buscarTransacaoIgual.bancoOrigem == "") {
+                            transacaoRepository.save(transacao)
+                            transacoesValidadas.add(t)
+                            contadorDeTransacoesValidas++
+                        } else {
+                            transacoesInvalidas.add(t)
+                            contadorDeTransacoesInvalidas++
+                            continue
+                        }
+
                     } catch (e: InvalidParameterException) {
                         transacoesInvalidas.add(t)
                         contadorDeTransacoesInvalidas++
