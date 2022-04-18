@@ -17,7 +17,8 @@ class kHomeController(
 ) {
 
     @GetMapping("/")
-    fun home():String{
+    fun home(model: ModelMap):String{
+        model.addAttribute("cargas", service.listarCargas())
         return "home"
     }
 
@@ -30,8 +31,8 @@ class kHomeController(
 
         val resultado = service.processaArquivo(file)
         if (resultado.sucesso){
-            model.addAttribute("lista", resultado.transacoes)
-            return "home"
+            model.addAttribute("transacoes", service.listarTransacoes())
+            return "transacoes"
         } else {
             model.addAttribute("resposta", resultado.carga)
             return "uploadError"

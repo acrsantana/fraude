@@ -1,5 +1,7 @@
 package br.com.acrtech.fraude.service
 
+import br.com.acrtech.fraude.dto.CargaDto
+import br.com.acrtech.fraude.dto.TransacaoDto
 import br.com.acrtech.fraude.model.Carga
 import br.com.acrtech.fraude.model.FileModel
 import br.com.acrtech.fraude.model.Resposta
@@ -165,5 +167,23 @@ class TransacaoService(
             valorTransacao = BigDecimal(campos[6]),
             dataHoraTransacao = LocalDateTime.parse(campos[7])
         )
+    }
+
+    fun listarTransacoes(): List<TransacaoDto> {
+        val transacoes = transacaoRepository.findAll()
+        val transacoesDto: MutableList<TransacaoDto> = mutableListOf()
+        transacoes.forEach {
+            transacoesDto.add(TransacaoDto(it))
+        }
+        return transacoesDto
+    }
+
+    fun listarCargas(): List<CargaDto> {
+        val cargas = cargaRepository.findAll()
+        val cargaDto: MutableList<CargaDto> = mutableListOf()
+        cargas.forEach {
+            cargaDto.add(CargaDto(it))
+        }
+        return cargaDto
     }
 }

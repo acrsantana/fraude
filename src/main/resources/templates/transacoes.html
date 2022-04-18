@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/38718e344d.js" crossorigin="anonymous"></script>
+    <title>Anti-fraudes</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <i class="fa-solid fa-building-shield"></i>
+            Anti-fraudes
+        </a>
+    </div>
+</nav>
+<div class="container">
+    <img src="https://rockyecommerce.com.br/wp-content/uploads/2017/07/icone-e1519763904511.png"
+         class="img-fluid rounded mx-auto d-block">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Banco Origem</th>
+            <th scope="col">Agência Origem</th>
+            <th scope="col">Conta Origem</th>
+            <th scope="col">Banco Destino</th>
+            <th scope="col">Agência Destino</th>
+            <th scope="col">Conta Destino</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Data/Hora</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="transacao: ${transacoes}">
+            <th th:text="${transacao.id}" scope="row">1</th>
+            <td th:text="${transacao.bancoOrigem}">01</td>
+            <td th:text="${transacao.agenciaOrigem}">0001</td>
+            <td th:text="${transacao.contaOrigem}">12345678</td>
+            <td th:text="${transacao.bancoDestino}">02</td>
+            <td th:text="${transacao.agenciaDestino}">0002</td>
+            <td th:text="${transacao.contaDestino}">876543210</td>
+            <td th:text="${transacao.valorTransacao}">580,00</td>
+            <td th:text="${transacao.dataTransacao}">18/04/2022 05:00</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
