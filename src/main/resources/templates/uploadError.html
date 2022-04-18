@@ -10,28 +10,40 @@
 <body>
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/">
             <i class="fa-solid fa-building-shield"></i>
             Anti-fraudes
         </a>
     </div>
 </nav>
 
-<div class="card" style="width: 18rem;">
+<div class="card">
     <img src="https://seusitefeito.com/wp-content/uploads/2018/08/1511705-Copy-1038x576.jpg"
          class="img-fluid rounded mx-auto d-block">
-    <div class="card-body">
-        <h5 class="card-title">Erro no processamento</h5>
-        <p class="card-text" th:text="${resposta.erros}">Mensagem de erro.</p>
-    </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item" th:text="${resposta.dataCarga}">An item</li>
-        <li class="list-group-item" th:text="${resposta.fileName}">A third item</li>
-        <li class="list-group-item" th:text="${resposta.size}">A third item</li>
-    </ul>
-    <div class="card-body">
-        <a href="/" class="btn btn-primary">Inicio</a>
-    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Status</th>
+            <th scope="col">Nome do Arquivo</th>
+            <th scope="col">Tamanho do Arquivo (em bytes)</th>
+            <th scope="col">Data da Carga</th>
+            <th scope="col">Data de Referência</th>
+            <th scope="col">Erro</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${resposta.status}">1</td>
+            <td th:text="${resposta.fileName}">01</td>
+            <td th:text="${resposta.size}">0001</td>
+            <td th:text="${resposta.dataCarga}">12345678</td>
+            <td th:text="${resposta.dataReferenciaTransacoes}">02</td>
+            <td th:text="${resposta.erro}">false</td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/" type="button" class="btn btn-primary">Inicio</button>
 </div>
 
 </body>

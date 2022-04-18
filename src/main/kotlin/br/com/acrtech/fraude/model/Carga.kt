@@ -22,7 +22,8 @@ data class Carga(
     var totalTransacoesFalha: Int,
     val dataCarga: LocalDateTime = LocalDateTime.now(),
     var dataReferenciaTransacoes: LocalDate?,
-    var erros: String?
+    var erro: String?,
+    var status: Boolean?
 ) {
     override fun toString(): String {
         return "Carga(id=$id, " +
@@ -33,6 +34,7 @@ data class Carga(
                 "totalTransacoesFalha=$totalTransacoesFalha, " +
                 "dataCarga=$dataCarga, " +
                 "dataReferenciaTransacoes=$dataReferenciaTransacoes, " +
-                "erros=$erros)"
+                "erros=$erro, " +
+                "status=$status)"
     }
 }

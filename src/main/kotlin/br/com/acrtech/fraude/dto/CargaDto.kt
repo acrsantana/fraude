@@ -12,7 +12,8 @@ class CargaDto() {
     var totalTransacoesFalha: Int? = null
     var dataCarga: String? = null
     var dataReferenciaTransacoes: String? = null
-    var erros: String? = null
+    var status: Boolean? = null
+    var erro: String? = null
 
     constructor(carga: Carga) : this() {
         this.id = carga.id
@@ -23,5 +24,7 @@ class CargaDto() {
         this.totalTransacoesFalha = carga.totalTransacoesFalha
         this.dataCarga = carga.dataCarga.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
         this.dataReferenciaTransacoes = carga.dataReferenciaTransacoes?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+        this.status = carga.status
+        this.erro = carga.erro
     }
 }

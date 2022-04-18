@@ -32,6 +32,7 @@
             <th scope="col">Tamanho do Arquivo (em bytes)</th>
             <th scope="col">Data da Carga</th>
             <th scope="col">Data de Referência</th>
+            <th scope="col">Status</th>
         </tr>
         </thead>
         <tbody>
@@ -41,6 +42,7 @@
             <td th:text="${carga.size}">0001</td>
             <td th:text="${carga.dataCarga}">12345678</td>
             <td th:text="${carga.dataReferenciaTransacoes}">02</td>
+            <td th:text="${carga.status}">false</td>
         </tr>
         </tbody>
     </table>

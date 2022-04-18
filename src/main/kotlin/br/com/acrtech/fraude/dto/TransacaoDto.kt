@@ -2,7 +2,6 @@ package br.com.acrtech.fraude.dto
 
 import br.com.acrtech.fraude.model.Transacao
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 class TransacaoDto() {
     var id:Long? = null

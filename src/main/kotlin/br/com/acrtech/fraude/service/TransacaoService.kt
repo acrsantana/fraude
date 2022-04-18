@@ -9,6 +9,8 @@ import br.com.acrtech.fraude.model.Transacao
 import br.com.acrtech.fraude.repository.CargaRepository
 import br.com.acrtech.fraude.repository.TransacaoRepository
 import org.apache.tomcat.util.http.fileupload.FileUploadException
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.security.InvalidParameterException
@@ -24,7 +26,7 @@ class TransacaoService(
     val fileUploadMessage: String = "Arquivo não existe ou não possui conteúdo"
     val illegalArgumentMessage: String = "Já foi realizada uma carga na data indicada: "
 
-    fun processaArquivo(file: FileModel): Resposta {
+    fun processaArquivo(file: FileModel, paginacao: Pageable): Resposta {
 
         val nomeArquivo = file.file?.originalFilename
         val tamanho = file.file?.bytes?.size
@@ -43,7 +45,8 @@ class TransacaoService(
             totalTransacoesFalha = contadorDeTransacoesInvalidas,
             totalTransacoesSucesso = contadorDeTransacoesValidas,
             dataReferenciaTransacoes = null,
-            erros = null
+            erro = null,
+            status = null
         )
 
         var transacaoNula = Transacao(
@@ -79,7 +82,7 @@ class TransacaoService(
             statusDaCarga.dataReferenciaTransacoes = dataPrimeiraTransacao
 
 //          Verifica se já existe uma carga no banco com a mesma data de referencia. Caso já exista a carga é abortada.
-            val carga = cargaRepository.findByDataReferenciaTransacoes(dataPrimeiraTransacao) ?: statusDaCarga
+            val carga = cargaRepository.listaPorData(dataPrimeiraTransacao) ?: statusDaCarga
             if (carga.id != null) {
                 throw IllegalArgumentException("$illegalArgumentMessage $dataPrimeiraTransacao")
             }
@@ -128,20 +131,22 @@ class TransacaoService(
                 statusDaCarga.totalTransacoesArquivo = contadorDeTransacoesNoArquivo
                 statusDaCarga.totalTransacoesSucesso = contadorDeTransacoesValidas
                 statusDaCarga.totalTransacoesFalha = contadorDeTransacoesInvalidas
+                statusDaCarga.status = true
                 cargaRepository.save(statusDaCarga)
 
 
             }
         } catch (excecao: Exception) {
             statusDaCarga.totalTransacoesFalha = contadorDeTransacoesInvalidas
-            statusDaCarga.erros = excecao.message
+            statusDaCarga.erro = excecao.message
             statusDaCarga.totalTransacoesArquivo = contadorDeTransacoesNoArquivo
             statusDaCarga.totalTransacoesSucesso = contadorDeTransacoesValidas
+            statusDaCarga.status = false
             cargaRepository.save(statusDaCarga)
-            return Resposta(sucesso = false, statusDaCarga, transacoesInvalidas)
+            return Resposta(sucesso = false, CargaDto(statusDaCarga), transacoesInvalidas)
         }
 
-        return Resposta(sucesso = true, statusDaCarga, transacoesValidadas)
+        return Resposta(sucesso = true, CargaDto(statusDaCarga), transacoesValidadas)
     }
 
     fun validaTransacao(transacao: String): Transacao? {
@@ -169,21 +174,19 @@ class TransacaoService(
         )
     }
 
-    fun listarTransacoes(): List<TransacaoDto> {
-        val transacoes = transacaoRepository.findAll()
-        val transacoesDto: MutableList<TransacaoDto> = mutableListOf()
-        transacoes.forEach {
-            transacoesDto.add(TransacaoDto(it))
-        }
-        return transacoesDto
+    fun listarTransacoes(
+        paginacao:Pageable
+
+    ): Page<TransacaoDto> {
+        return transacaoRepository.findAll(paginacao).map { TransacaoDto(it) }
+
     }
 
-    fun listarCargas(): List<CargaDto> {
-        val cargas = cargaRepository.findAll()
-        val cargaDto: MutableList<CargaDto> = mutableListOf()
-        cargas.forEach {
-            cargaDto.add(CargaDto(it))
-        }
-        return cargaDto
+    fun listarCargas(
+        paginacao: Pageable
+
+    ): Page<CargaDto> {
+        return cargaRepository.findAll(paginacao).map { CargaDto(it) }
+
     }
 }
