@@ -6,10 +6,17 @@ import com.sendgrid.SendGrid
 import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
 class EmailService {
+
+    @Value("\${app.sendgrid.key}")
+    lateinit var key: String
+
+    @Value("\${app.sendgrid.account}")
+    lateinit var account: String
 
     fun sendEmail(
         para: String,
@@ -17,8 +24,8 @@ class EmailService {
         conteudo: String
     ) {
 
-        val sg = SendGrid(EmailProperties().key)
-        val from = Email(EmailProperties().account)
+        val sg = SendGrid(key)
+        val from = Email(account)
         val to = Email(para)
         val subject = assunto
         val content = Content("text/plain", conteudo)
