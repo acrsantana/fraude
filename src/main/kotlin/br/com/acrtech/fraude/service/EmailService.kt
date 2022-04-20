@@ -17,8 +17,8 @@ class EmailService {
         conteudo: String
     ) {
 
-        val sg = SendGrid()
-        val from = Email()
+        val sg = SendGrid(EmailProperties().key)
+        val from = Email(EmailProperties().account)
         val to = Email(para)
         val subject = assunto
         val content = Content("text/plain", conteudo)
