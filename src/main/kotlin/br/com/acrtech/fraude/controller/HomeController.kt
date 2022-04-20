@@ -6,16 +6,13 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.stereotype.Controller
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.ui.ModelMap
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import javax.servlet.ServletContext
 
 @Controller
 class HomeController(
-    val context: ServletContext,
     val service: TransacaoService
 ) {
 
