@@ -17,8 +17,8 @@ class EmailService {
         conteudo: String
     ) {
 
-        val sg = SendGrid("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")
-        val from = Email("cezaodabahia@gmail.com")
+        val sg = SendGrid()
+        val from = Email()
         val to = Email(para)
         val subject = assunto
         val content = Content("text/plain", conteudo)
