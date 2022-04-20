@@ -29,9 +29,6 @@ class EmailService {
             request.endpoint = "mail/send"
             request.body = mail.build()
             val response = sg.api(request)
-            println("Status Code: ${response.statusCode}")
-            println("Body: ${response.body}")
-            println("Header: ${response.headers}")
         } catch (e: Exception) {
             throw e
         }

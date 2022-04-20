@@ -43,13 +43,13 @@ class UsuarioController(
         @PageableDefault(size = 20) paginacao: Pageable
     ): String {
         val senha = Random.nextLong(100000, 999999).toString()
+        service.adicionaUsuario(usuarioDto, senha)
         val mail: String = usuarioDto.email ?: ""
         email.sendEmail(
             mail,
             "Sua senha de acesso ao sistema Anti-fraudes.",
             "Segue senha gerada de forma automática pela aplicação: $senha"
         )
-        service.adicionaUsuario(usuarioDto, senha)
         model.addAttribute("usuarios", service.listarTodos(paginacao))
         return "/usuarios/listar"
     }
