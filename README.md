@@ -13,3 +13,12 @@ Para este desafio será utilizado o Kotlin como linguagem de programação respo
 Dificuldades
 ---------------------------------------------------------------------------------------
 Nesta primeira semana a principal dificuldade foi em deixar o código organizado de forma a separar as responsabilidades. Toda a parte de validação das informações também terminou dando mais trabalho do que o imaginado.
+
+Eu no Github
+---------------------------------------------------------------------------------------
+
+<div>
+  <a href="https://github.com/acrsantana">
+  <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=acrsantana&layout=compact&langs_count=7&theme=dracula"/>
+  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=acrsantana&show_icons=true&theme=dracula&include_all_commits=true&count_private=true"/>
+</div>
