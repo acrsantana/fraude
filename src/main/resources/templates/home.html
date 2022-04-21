@@ -40,11 +40,11 @@
         <tbody>
         <tr th:each="carga: ${cargas}">
             <th th:text="${carga.id}" scope="row">1</th>
-            <td th:text="${carga.fileName}">01</td>
-            <td th:text="${carga.size}">0001</td>
-            <td th:text="${carga.dataCarga}">12345678</td>
-            <td th:text="${carga.dataReferenciaTransacoes}">02</td>
-            <td th:text="${carga.status}">false</td>
+            <td th:text="${carga.fileName}">carga-001</td>
+            <td th:text="${carga.size}">873</td>
+            <td th:text="${carga.dataCarga}">20/04/2022 21:38:00</td>
+            <td th:text="${carga.dataReferenciaTransacoes}">01/01/2022</td>
+            <td th:text="${carga.status}">true</td>
         </tr>
         </tbody>
     </table>
