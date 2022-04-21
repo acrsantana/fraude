@@ -1,15 +1,24 @@
-# fraude
+# FraudeApp - Alura Challenge 2022
 #alurachallengeback3
-Alura Challenge 2022
 
 História
 ---------------------------------------------------------------------------------------
-Precisamos desenvolver uma **aplicação Web tradicional(server-side)** para realizar análise de milhares de transações financeiras e identificar possíveis transações suspeitas. 
+Desenvolvimento de uma **aplicação Web tradicional(server-side)** para realizar análise de milhares de transações financeiras e identificar possíveis transações suspeitas. 
 
-Para realizar essa análise, precisaremos desenvolver uma tela para upload de arquivos, que deve suportar diversos formatos distintos, bem como implementar algoritmos para extração, validação e persistência das informações. Boas práticas de orientação a objetos, design patterns e princípios SOLID serão essenciais. Também será desenvolvido um CRUD de usuários, bem como mecanismos de autenticação e autorização, para proteger a aplicação.
+Stack utilizada
+---------------------------------------------------------------------------------------
+Para este desafio será utilizado o Kotlin como linguagem de programação responsável pelo server side, junto com o framework Spring. No client side teremos o HTML, Thymeleaf e Bootstrap. Para a persistencia será utilizado o Postgresql<br><br>
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg"  width="50" height="50"/>&nbsp;&nbsp;&nbsp;<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-plain-wordmark.svg" width="50" height="50"/>&nbsp;&nbsp;&nbsp;<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-plain-wordmark.svg" width="50" height="50"/>&nbsp;&nbsp;&nbsp;<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original-wordmark.svg" width="50" height="50"/>&nbsp;&nbsp;&nbsp;<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/intellij/intellij-original.svg" width="50" height="50"/>&nbsp;&nbsp;<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original-wordmark.svg" width="50" height="50"/>&nbsp;&nbsp;&nbsp;<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original-wordmark.svg" width="50" height="50"/>
 
-Temos um período de tempo de 4 semanas para desenvolver o projeto. Nas 3 primeiras, teremos tarefas a serem feitas e a última semana para ajustes ou para completar as tarefas pendentes. Vamos trabalhar com o sistema ágil de desenvolvimento, utilizando o Trello da seguinte forma:
+Dificuldades
+---------------------------------------------------------------------------------------
+Nesta primeira semana a principal dificuldade foi em deixar o código organizado de forma a separar as responsabilidades. Toda a parte de validação das informações também terminou dando mais trabalho do que o imaginado.
 
-O Trello é uma ferramenta de uso individual para você controlar o andamento das suas atividades, mas ele não será avaliado. Utilize-o para ter um melhor controle do andamento do seu projeto.
+Eu no Github
+---------------------------------------------------------------------------------------
 
-Bom projeto!
+<div>
+  <a href="https://github.com/acrsantana">
+  <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=acrsantana&layout=compact&langs_count=7&theme=dracula"/>
+  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=acrsantana&show_icons=true&theme=dracula&include_all_commits=true&count_private=true"/>
+</div>
