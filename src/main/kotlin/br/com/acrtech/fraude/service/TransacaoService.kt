@@ -22,8 +22,10 @@ class TransacaoService(
     val cargaRepository: CargaRepository
 ) {
 
-    val invalidParameterMessage: String = "Quantidade inválida de parâmetros. Todos os campos são obrigatórios"
-    val fileUploadMessage: String = "Arquivo não existe ou não possui conteúdo"
+    val invalidParameterMessage: String = "Quantidade inválida de parâmetros, todos os campos são obrigatórios." +
+            "Verifique o arquivo de origem e tente novamente."
+    val fileUploadMessage: String = "Arquivo não existe ou não possui conteúdo. Verifique o arquivo de origem" +
+            " e tente novamente."
     val illegalArgumentMessage: String = "Já foi realizada uma carga na data indicada: "
 
     fun processaArquivo(file: FileModel, paginacao: Pageable): Resposta {
@@ -49,7 +51,7 @@ class TransacaoService(
             status = null
         )
 
-        var transacaoNula = Transacao(
+        val transacaoNula = Transacao(
             null,
             "",
             "",
@@ -64,7 +66,7 @@ class TransacaoService(
         try {
 
             file.file?.inputStream?.bufferedReader()?.forEachLine { transacao ->
-                if (!transacao.trim().isNullOrEmpty()){
+                if (transacao.trim().isNotEmpty()){
                     transacoesASeremValidadas.add(transacao)
                     contadorDeTransacoesNoArquivo++
                 }
@@ -74,7 +76,8 @@ class TransacaoService(
                 throw FileUploadException(fileUploadMessage)
             }
 
-//          Pega a primeira linha do arquivo e tenta converter em uma transação válida. Caso não consiga a carga é abortada.
+//          Pega a primeira linha do arquivo e tenta converter em uma transação válida.
+//          Caso não consiga a carga é abortada.
             val primeiraTransacao: Transacao = validaTransacao(transacoesASeremValidadas[0])
                 ?: throw InvalidParameterException(invalidParameterMessage)
 
@@ -136,9 +139,9 @@ class TransacaoService(
 
 
             }
-        } catch (excecao: Exception) {
+        } catch (e: Exception) {
             statusDaCarga.totalTransacoesFalha = contadorDeTransacoesInvalidas
-            statusDaCarga.erro = excecao.message
+            statusDaCarga.erro = e.message
             statusDaCarga.totalTransacoesArquivo = contadorDeTransacoesNoArquivo
             statusDaCarga.totalTransacoesSucesso = contadorDeTransacoesValidas
             statusDaCarga.status = false
@@ -150,12 +153,12 @@ class TransacaoService(
     }
 
     fun validaTransacao(transacao: String): Transacao? {
-        var campos = transacao.split(",")
+        val campos = transacao.split(",")
         if (campos.size != 8) {
             return null
         } else {
             campos.forEach {
-                if (it.isNullOrEmpty()) {
+                if (it.isEmpty()) {
                     return null
                 }
             }
