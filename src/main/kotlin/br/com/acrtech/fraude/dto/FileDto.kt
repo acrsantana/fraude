@@ -1,7 +1,7 @@
-package br.com.acrtech.fraude.model
+package br.com.acrtech.fraude.dto
 
 import org.springframework.web.multipart.MultipartFile
 
-data class FileModel (
+data class FileDto (
     val file: MultipartFile?
 )

@@ -6,17 +6,17 @@ import kotlin.random.Random
 
 @Entity
 @Table(name = "usuarios")
-class Usuario() {
+class Usuario(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
-    var nome: String? = null
-    var email: String? = null
-    var password: String? = null
+    val id: Long? = null,
+    var nome: String?,
+    var email: String?,
+    var password: String? = null,
+    val visivel: Boolean = true
+) {
 
-    constructor(usuarioDto: UsuarioDto) : this() {
-        this.nome = usuarioDto.nome
-        this.email = usuarioDto.email
+    constructor(usuarioDto: UsuarioDto) : this(nome = usuarioDto.nome, email = usuarioDto.email) {
         this.password = geraSenhaAleatoria()
     }
 

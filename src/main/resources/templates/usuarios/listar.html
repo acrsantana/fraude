@@ -10,7 +10,7 @@
 <body>
 <nav class="navbar navbar-dark bg-primary mb-3">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/static">
+        <a class="navbar-brand" href="/usuarios">
             <i class="fa-solid fa-building-shield"></i>
             Anti-fraudes
         </a>
@@ -18,25 +18,29 @@
 </nav>
 <div class="container">
 
-<table class="table">
-    <thead>
-    <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Nome</th>
-        <th scope="col">E-mail</th>
-        <th scope="col">Opções</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="usuario: ${usuarios}">
-        <th th:text="${usuario.id}" scope="row">1</th>
-        <td th:text="${usuario.nome}">Augusto Cezar Ribeiro Santana</td>
-        <td th:text="${usuario.email}">cezaodabahia@gmail.com</td>
-        <td><button type="button" class="btn btn-primary">Editar</button> <button type="button" class="btn btn-primary">Remover</button></td>
-    </tr>
-    </tbody>
-</table>
-<a href="usuarios/cadastro" type="button" class="btn btn-primary">Novo</a>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nome</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Opções</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="usuario: ${usuarios}">
+            <th th:text="${usuario.id}" scope="row">1</th>
+            <td th:text="${usuario.nome}">Augusto Cezar Ribeiro Santana</td>
+            <td th:text="${usuario.email}">cezaodabahia@gmail.com</td>
+            <td>
+                <a th:href="@{/usuarios/edita(id=${usuario.id})}" class="btn btn-primary text-nowrap btn-sm">Editar</a>
+                <a th:href="@{/usuarios/apaga(id=${usuario.id})}" class="btn btn-primary text-nowrap btn-sm">Remover</a>
+            </td>
+            </form>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/usuarios/cadastro" type="button" class="btn btn-primary">Novo</a>
 </div>
 </body>
 </html>

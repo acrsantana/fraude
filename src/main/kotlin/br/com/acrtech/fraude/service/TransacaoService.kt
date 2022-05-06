@@ -3,8 +3,8 @@ package br.com.acrtech.fraude.service
 import br.com.acrtech.fraude.dto.CargaDto
 import br.com.acrtech.fraude.dto.TransacaoDto
 import br.com.acrtech.fraude.model.Carga
-import br.com.acrtech.fraude.model.FileModel
-import br.com.acrtech.fraude.model.Resposta
+import br.com.acrtech.fraude.dto.FileDto
+import br.com.acrtech.fraude.dto.RespostaDto
 import br.com.acrtech.fraude.model.Transacao
 import br.com.acrtech.fraude.repository.CargaRepository
 import br.com.acrtech.fraude.repository.TransacaoRepository
@@ -28,7 +28,7 @@ class TransacaoService(
             " e tente novamente."
     val illegalArgumentMessage: String = "Já foi realizada uma carga na data indicada: "
 
-    fun processaArquivo(file: FileModel, paginacao: Pageable): Resposta {
+    fun processaArquivo(file: FileDto, paginacao: Pageable): RespostaDto {
 
         val nomeArquivo = file.file?.originalFilename
         val tamanho = file.file?.bytes?.size
@@ -146,10 +146,10 @@ class TransacaoService(
             statusDaCarga.totalTransacoesSucesso = contadorDeTransacoesValidas
             statusDaCarga.status = false
             cargaRepository.save(statusDaCarga)
-            return Resposta(sucesso = false, CargaDto(statusDaCarga), transacoesInvalidas)
+            return RespostaDto(sucesso = false, CargaDto(statusDaCarga), transacoesInvalidas)
         }
 
-        return Resposta(sucesso = true, CargaDto(statusDaCarga), transacoesValidadas)
+        return RespostaDto(sucesso = true, CargaDto(statusDaCarga), transacoesValidadas)
     }
 
     fun validaTransacao(transacao: String): Transacao? {

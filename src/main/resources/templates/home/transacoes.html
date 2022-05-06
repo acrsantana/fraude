@@ -8,27 +8,28 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<nav class="navbar navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="/static">
             <i class="fa-solid fa-building-shield"></i>
             Anti-fraudes
         </a>
+        <a class="navbar-brand" href="/static">Logout</a>
     </div>
 </nav>
 <div class="container">
     <img src="https://rockyecommerce.com.br/wp-content/uploads/2017/07/icone-e1519763904511.png"
          class="img-fluid rounded mx-auto d-block">
 
-    <table class="table">
+    <table class="table mt-3">
         <thead>
         <tr>
             <th scope="col">Id</th>
             <th scope="col">Banco Origem</th>
-            <th scope="col">Agência Origem</th>
+            <th scope="col">Ag. Origem</th>
             <th scope="col">Conta Origem</th>
             <th scope="col">Banco Destino</th>
-            <th scope="col">Agência Destino</th>
+            <th scope="col">Ag. Destino</th>
             <th scope="col">Conta Destino</th>
             <th scope="col">Valor</th>
             <th scope="col">Data/Hora</th>
@@ -48,6 +49,9 @@
         </tr>
         </tbody>
     </table>
+    <div class="d-grid gap-2 col-2 mx-auto">
+        <a href="/static" type="button" class="btn btn-primary mt-3">Retornar a home</a>
+    </div>
 </div>
 </body>
 </html>

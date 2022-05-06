@@ -1,8 +1,8 @@
-package br.com.acrtech.fraude.model
+package br.com.acrtech.fraude.dto
 
 import br.com.acrtech.fraude.dto.CargaDto
 
-class Resposta(
+class RespostaDto(
     val sucesso: Boolean,
     val carga: CargaDto,
     val transacoes: List<String>

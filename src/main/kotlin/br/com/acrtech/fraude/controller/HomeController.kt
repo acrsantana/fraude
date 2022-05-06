@@ -1,6 +1,6 @@
 package br.com.acrtech.fraude.controller
 
-import br.com.acrtech.fraude.model.FileModel
+import br.com.acrtech.fraude.dto.FileDto
 import br.com.acrtech.fraude.service.TransacaoService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -19,23 +19,28 @@ class HomeController(
     @GetMapping("/")
     fun home(model: ModelMap, @PageableDefault(size=100, sort = ["status","dataCarga"], direction = Sort.Direction.DESC) paginacao: Pageable):String{
         model.addAttribute("cargas", service.listarCargas(paginacao))
-        return "home"
+        return "/home/home"
     }
 
     @PostMapping("uploadFile")
-    fun uploadFile(file: FileModel, result: BindingResult, model: ModelMap, paginacao: Pageable): String {
+    fun uploadFile(file: FileDto, result: BindingResult, model: ModelMap, paginacao: Pageable): String {
         if (result.hasErrors()){
             model.addAttribute("erro", "Erro ao carregar o arquivo")
-            return "uploadError"
+            return "/home/uploadError"
         }
 
         val resultado = service.processaArquivo(file, paginacao)
         if (resultado.sucesso){
             model.addAttribute("transacoes", service.listarTransacoes(paginacao))
-            return "transacoes"
+            return "/home/transacoes"
         } else {
             model.addAttribute("resposta", resultado.carga)
-            return "uploadError"
+            return "/home/uploadError"
+        }
+
+        @GetMapping("/login")
+        fun login(): String{
+            return "/login/login"
         }
 
     }
