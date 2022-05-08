@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UsuarioRepository : JpaRepository<Usuario, Long> {
 
+    fun findByEmail(email: String?): Usuario?
+
 
     @Query("select u from Usuario u where u.visivel = true")
     fun buscaTodos(paginacao: Pageable): Page<Usuario>

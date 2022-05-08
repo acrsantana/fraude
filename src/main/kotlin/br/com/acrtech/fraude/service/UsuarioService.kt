@@ -5,6 +5,8 @@ import br.com.acrtech.fraude.model.Usuario
 import br.com.acrtech.fraude.repository.UsuarioRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import kotlin.random.Random
@@ -13,7 +15,7 @@ import kotlin.random.Random
 class UsuarioService(
     val repository: UsuarioRepository,
     val email: EmailService
-) {
+) : UserDetailsService {
     val illegalArgumentMessage: String = "Já existe um usuário cadastrado com o e-mail informado"
     fun listarTodos(paginacao: Pageable): Page<UsuarioDto> {
 
@@ -60,12 +62,9 @@ class UsuarioService(
         repository.save(usuario)
     }
 
-//    fun login(userId:String, password: String): Boolean {
-//        ...
-//        if(!BCryptPasswordEncoder().matches(password, user.passwordHash)){
-//            return false
-//        }
-//        return true
-//    }
+    override fun loadUserByUsername(username: String?): UserDetails {
+        val usuario = repository.findByEmail(username) ?: throw RuntimeException()
+        return UserDetailService(usuario)
+    }
 
 }
