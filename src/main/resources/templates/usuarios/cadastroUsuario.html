@@ -20,13 +20,19 @@
     <form th:action="@{/usuarios/cadastro}" th:object="${usuario}" method="POST">
         <div class="mb-3">
             <label class="form-label">Nome</label>
-            <input type="text" class="form-control" placeholder="Seu nome" th:field="*{nome}">
+            <input type="text" class="form-control" placeholder="Seu nome" th:field="${usuario.nome}">
+        </div>
+        <div class="text-danger" th:if="${param.error}">
+            Campo obrigatório.
         </div>
         <div class="mb-3">
             <label class="form-label">E-mail</label>
             <!--/*@thymesVar id="email" type="kotlin"*/-->
-            <input type="email" class="form-control" placeholder="Seu e-mail" th:field="*{email}">
+            <input type="email" class="form-control" placeholder="Seu e-mail" th:field="${usuario.email}">
             <div id="emailHelp" class="form-text">Jamais compartilharemos o seu e-mail com ninguém.</div>
+        </div>
+        <div class="text-danger" th:if="${param.error}">
+            Campo obrigatório.
         </div>
         <button type="submit" class="btn btn-primary">Cadastrar</button>
     </form>

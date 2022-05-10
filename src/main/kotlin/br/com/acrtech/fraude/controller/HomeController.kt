@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 
+@Suppress("UNREACHABLE_CODE")
 @Controller
 class HomeController(
     val service: TransacaoService
@@ -23,7 +24,12 @@ class HomeController(
     }
 
     @PostMapping("uploadFile")
-    fun uploadFile(file: FileDto, result: BindingResult, model: ModelMap, paginacao: Pageable): String {
+    fun uploadFile(
+        file: FileDto,
+        result: BindingResult,
+        model: ModelMap,
+        paginacao: Pageable
+    ): String {
         if (result.hasErrors()){
             model.addAttribute("erro", "Erro ao carregar o arquivo")
             return "/home/uploadError"

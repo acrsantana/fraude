@@ -7,23 +7,26 @@ import org.springframework.data.web.PageableDefault
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.ModelMap
-import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import javax.validation.Valid
 
 @Controller
 @RequestMapping("/usuarios")
 class UsuarioController(
-    val service: UsuarioService
+    val usuarioService: UsuarioService
 ) {
 
     @GetMapping
-    fun listarTodos(model: ModelMap, @PageableDefault(size = 20, sort = ["id"]) paginacao: Pageable): String {
-        model.addAttribute("usuarios", service.listarTodos(paginacao))
+    fun listarTodos(
+        model: ModelMap,
+        @PageableDefault(size = 20, sort = ["id"]) paginacao: Pageable
+    ): String {
+        model.addAttribute("usuarios", usuarioService.listarTodos(paginacao))
 
         return "/usuarios/listar"
     }
@@ -39,11 +42,16 @@ class UsuarioController(
     @PostMapping("/cadastro")
     fun cadastraUsuario(
         model: Model,
-        @ModelAttribute usuarioDto: UsuarioDto,
-        @PageableDefault(size = 20, sort = ["id"]) paginacao: Pageable
+        @ModelAttribute @Valid usuarioDto: UsuarioDto,
+        @PageableDefault(size = 20, sort = ["id"]) paginacao: Pageable,
+        result: BindingResult
     ): String {
-        service.adicionaUsuario(usuarioDto)
-        model.addAttribute("usuarios", service.listarTodos(paginacao))
+        if (result.hasErrors()){
+            model.addAttribute("usuario", usuarioDto)
+            return "usuarios/cadastroUsuario"
+        }
+        usuarioService.adicionaUsuario(usuarioDto)
+        model.addAttribute("usuarios", usuarioService.listarTodos(paginacao))
         return "/usuarios/listar"
     }
 
@@ -53,18 +61,18 @@ class UsuarioController(
         model: Model,
     ): String {
         println("passou aqui no alteraUsuario")
-        model.addAttribute("usuario", service.listarPorId(id))
+        model.addAttribute("usuario", usuarioService.listarPorId(id))
         return "usuarios/editaUsuario"
     }
     @PostMapping("/edita")
     fun editaUsuario(
         model: Model,
-        @ModelAttribute usuarioDto: UsuarioDto,
+        @ModelAttribute @Valid usuarioDto: UsuarioDto,
         @PageableDefault(size = 20, sort = ["id"]) paginacao: Pageable
     ): String {
         println("passou aqui no editaUsuario")
-        service.editaUsuario(usuarioDto)
-        model.addAttribute("usuarios", service.listarTodos(paginacao))
+        usuarioService.editaUsuario(usuarioDto)
+        model.addAttribute("usuarios", usuarioService.listarTodos(paginacao))
         return "/usuarios/listar"
     }
     @GetMapping("/apaga")
@@ -74,8 +82,8 @@ class UsuarioController(
         @PageableDefault(size = 20, sort = ["id"]) paginacao: Pageable
 
     ): String {
-        service.deletaUsuario(id)
-        model.addAttribute("usuarios", service.listarTodos(paginacao))
+        usuarioService.deletaUsuario(id)
+        model.addAttribute("usuarios", usuarioService.listarTodos(paginacao))
         return "/usuarios/listar"
     }
 

@@ -21,9 +21,19 @@ class SecurityConfig(
         http
             ?.authorizeRequests()?.anyRequest()?.authenticated()
             ?.and()
-            ?.formLogin()?.loginPage("/login")?.permitAll()
+            ?.formLogin()
+                ?.loginPage("/login")
+                ?.loginProcessingUrl("/login")
+                ?.defaultSuccessUrl("/", true)
+                ?.permitAll()
             ?.and()
             ?.httpBasic()
+            ?.and()
+            ?.logout()
+                ?.logoutUrl("/appLogout")
+                ?.logoutSuccessUrl("/login")
+            ?.and()
+            ?.csrf()?.disable()
     }
 
     override fun configure(auth: AuthenticationManagerBuilder?) {

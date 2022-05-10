@@ -25,9 +25,6 @@ class UsuarioService(
     }
 
     fun adicionaUsuario(usuario: UsuarioDto) {
-        if (usuario.email.isNullOrBlank() || usuario.nome.isNullOrBlank()){
-            throw IllegalArgumentException(illegalArgumentMessage)
-        }
 
         if (repository.existsByEmail(usuario.email!!)){
             throw IllegalArgumentException(illegalArgumentMessage)
@@ -56,6 +53,10 @@ class UsuarioService(
     }
 
     fun editaUsuario(usuarioDto: UsuarioDto) {
+
+        if (repository.existsByEmail(usuarioDto.email!!)){
+            throw IllegalArgumentException(illegalArgumentMessage)
+        }
         var usuario = repository.findById(usuarioDto.id!!).orElseThrow()
         usuario.nome = usuarioDto.nome
         usuario.email = usuarioDto.email
